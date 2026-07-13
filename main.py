@@ -2,6 +2,7 @@ import os
 import time
 import sqlite3
 import threading
+import requests
 from datetime import datetime
 import pytz
 import random
@@ -1286,6 +1287,7 @@ def handle_left_or_joined(my_chat_member):
             conn.commit()
 
 # 🌐 Render Free Tier ke liye Flask Web Server Setup
+import requests # 👈 [UPDATED] Yeh line zaroor add karein top par
 from flask import Flask
 app = Flask('')
 
@@ -1294,13 +1296,27 @@ def home():
     return "Bot is running perfectly 24/7!"
 
 def run_web_server():
-    # Render automatic $PORT assign karta hai, default 8080 use karein
     port = int(os.environ.get("PORT", 8080))
     app.run(host='0.0.0.0', port=port)
+
+# 🔄 Self-Ping Function: Jo bot ko sone nahi dega
+def keep_alive_ping():
+    while True:
+        time.sleep(300) # Har 5 minute (300 seconds) me khud ko ping karega
+        try:
+            # ⚠️ APNA RENDER URL PASTE KAREIN: Niche wale URL ko apne actual Render URL se badal dein
+            render_url = "https://render-f0gn.onrender.com" 
+            requests.get(render_url)
+            print("Self-ping successful, keeping bot alive!")
+        except Exception as e:
+            print(f"Self-ping failed: {e}")
 
 if __name__ == "__main__":
     # Web server ko background thread mein start karein
     threading.Thread(target=run_web_server, daemon=True).start()
+
+    # 🚀 Self-ping loop ko background thread mein start karein
+    threading.Thread(target=keep_alive_ping, daemon=True).start()
 
     # ❤️‍🩹 Aapke purane background functions wale threads start karein
     try:
@@ -1313,4 +1329,3 @@ if __name__ == "__main__":
     
     # Infinity polling loop start karein
     bot.infinity_polling(timeout=60, long_polling_timeout=60)
-                
