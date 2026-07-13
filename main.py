@@ -1266,9 +1266,8 @@ def handle_left_or_joined(my_chat_member):
                 )
                 
                 group_markup = InlineKeyboardMarkup()
-                # 🛠️ [FIXED] t.me के बाद forward slash ( / ) जोड़ दिया गया है
                 add_to_group_url = f"https://t.me/{BOT_USERNAME}?startgroup=true"
-                group_markup.add(InlineKeyboardButton(text="✨ ᴀᴅᴅ ᴍᴇ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ", url=add_to_group_url, style="primary"))
+                group_markup.add(InlineKeyboardButton(text="✨ ᴀᴅᴅ ᴍᴇ ɪɴ ʏᴏᴜʀ ɢʀᴏᴜᴘ", url=add_to_group_url))
                 
                 try:
                     if selected_image_path:
@@ -1285,12 +1284,33 @@ def handle_left_or_joined(my_chat_member):
             # Bot ko group se nikalne par data automatically clean ho jayega
             cursor.execute("DELETE FROM groups WHERE chat_id = ?", (chat_id,))
             conn.commit()
+
+# 🌐 Render Free Tier ke liye Flask Web Server Setup
+from flask import Flask
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is running perfectly 24/7!"
+
+def run_web_server():
+    # Render automatic $PORT assign karta hai, default 8080 use karein
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
+
+if __name__ == "__main__":
+    # Web server ko background thread mein start karein
+    threading.Thread(target=run_web_server, daemon=True).start()
+
+    # ❤️‍🩹 Aapke purane background functions wale threads start karein
+    try:
+        threading.Thread(target=global_poll_manager, daemon=True).start()
+        threading.Thread(target=daily_leaderboard_scheduler, daemon=True).start()
+    except NameError:
+        print("Warning: global_poll_manager ya daily_leaderboard_scheduler code mein nahi mile!")
+
+    print("Successfully 🇮🇳 deployed...🚀")
+    
+    # Infinity polling loop start karein
+    bot.infinity_polling(timeout=60, long_polling_timeout=60)
                 
-# ❤️‍🩹 थ्रेड्स स्टार्ट करें
-threading.Thread(target=global_poll_manager, daemon=True).start()
-threading.Thread(target=daily_leaderboard_scheduler, daemon=True).start()
-
-print("Successfully 🇮🇳 deployed...🚀")
-
-bot.infinity_polling(timeout=60, long_polling_timeout=60)
-                                         
