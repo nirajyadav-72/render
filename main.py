@@ -31,7 +31,13 @@ bot = telebot.TeleBot(API_TOKEN)
 
 # 🚀 MongoDB Connection Setup
 try:
-    mongo_client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
+    # 🛠️ यहाँ बदलाव किया गया है: SSL/TLS हैंडशेक एरर को ठीक करने के लिए पैरामीटर्स जोड़े गए हैं
+    mongo_client = MongoClient(
+        MONGODB_URI, 
+        serverSelectionTimeoutMS=5000,
+        tls=True,
+        tlsAllowInvalidCertificates=True
+    )
     # Connection को टेस्ट करें
     mongo_client.admin.command('ping')
     print("✅ MongoDB Connection Successful!")
@@ -74,6 +80,7 @@ if SUPPORT_GROUP_ID:
         SUPPORT_GROUP_ID = int(SUPPORT_GROUP_ID)
     except ValueError:
         SUPPORT_GROUP_ID = None
+    
 
 # 💾 MongoDB के साथ Database Initialization
 def init_db():
