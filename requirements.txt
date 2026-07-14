@@ -1,3 +1,4 @@
+pymongo
 pyTelegramBotAPI>=4.26.0
 pytz>=2026.1
 python-dotenv>=1.0.1
