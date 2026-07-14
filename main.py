@@ -1216,7 +1216,7 @@ def keep_alive_ping():
     while True:
         time.sleep(300)
         try:
-            render_url = "https://render-f0gn.onrender.com" 
+            render_url = "https://quiz-bot-2-rhg0.onrender.com" 
             requests.get(render_url)
             print("Self-ping successful, keeping bot alive!")
         except Exception as e:
